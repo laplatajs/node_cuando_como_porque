@@ -1,0 +1,287 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title NodeJS Como? Cuando? Por qué?
+
+    // build:css styles/styles.css
+    //- Check out 'src/bower_components/prism/themes/' for available themes
+    link(rel='stylesheet', type='text/css', href='bower_components/prism/themes/prism-tomorrow.css')
+    link(rel='stylesheet', type='text/css', href='styles/main.css')
+    // endbuild
+
+  body
+
+    article
+
+      section(data-bespoke-hash="cover", data-bespoke-state="white-background").intro--background-full.meetup-cover
+
+      section(data-bespoke-hash="initial")
+        h1 NodeJS
+        h2 Como? Cuando? Por qué?
+        br
+        br
+        div
+          h4 Martin Alderete
+          h4 malderete@gmail.com
+          div
+            a(href='http://github.com/malderete') github.com/malderete
+          div
+            a(href='http://twitter.com/alderetemartin') @alderetemartin
+          hr
+          div
+            a(href='http://github.com/laplatajs') github.com/laplatajs
+
+      section(data-bespoke-hash="agenda")
+        h2 Agenda
+        hr
+        div
+          dev Repaso
+          div Como funciona NodeJS
+          div Concurrencia en Node
+          div NodeJS NO es solo HTTP
+          div Networking con NodeJS
+          div NodeJS en Sistemas distribuidos
+          div Mi opinion :D!
+
+      section(data-bespoke-hash="so")
+        h2 Repaso de SO
+        ul.bullet
+          li <em>CPU bound Process</em>
+          li Procesos que estan condicionados por el <b>CPU</b>, es decir, mejoran si el CPU mejora!
+          li.white Procesamiento de audio, calculos matriciales, etc.
+        br
+        ul
+          li <em>I/O bound Process</em>
+          li Procesos que estan condicionados por <b>I/O</b>, es decir, mejoran si el subsistema de I/O mejora!
+          li.white File system, bases de datos, Networking, etc.
+        br
+        h2.bullet.white La mayoria de las apps son I/O BOUND!
+
+      section(data-bespoke-hash="how-it-works-internals")
+        h2.bullet  Arquitectura de NodeJS
+        div
+          div Event-Driven!
+          div Asynchronous Programming!
+          div Inspirado por <b>Twisted</b>, <b>EventMachine</b>, etc...
+          div Single-thread (User space)
+          div Utiliza en <b>libev</b> (event-loop)
+          div Utiliza <b>libeio</b> (POSIX I/O asincrona)
+          div y otras cosas...
+          div
+            img(src="images/node_internal_stack.png", alt="Node internal stack")
+
+      section(data-bespoke-hash="how-it-works-event-loop")
+        h2.bullet <b>THE</b> event-loop <a href="http://www.kegel.com/c10k.html">(C10K)</a>
+          ul
+            li
+              img(src="images/threading_node.png", alt="Node Event Loop")
+
+      section(data-bespoke-hash="concurrency-no-way")
+          h2.bullet Concurrencia hecha simple
+          hr
+          ul
+            li
+              img(src="images/NO_concurrencia.gif")
+      
+      section(data-bespoke-hash="concurrency-callbacks")
+        h2.bullet Callbacks
+        hr
+        div
+          div Comunes en JS, tod@s las usamos!
+          div Pueden generar el "Callback HELL o Pyramid of Doom" Facilmente! &#128520;&#128520;&#128520;
+
+        pre.bullet
+          code.language-javascript.
+            doSomething(params, doThisWhenFinish);
+
+      section(data-bespoke-hash="concurrency-callbacks-hell-doom")
+        h2.bullet Callbacks Hell
+        hr
+        pre.bullet
+          code.language-javascript.
+            do_algo_1(function(input_value, result1) {
+              do_algo_2(function(result2) {
+                do_algo_3(function(result3) {
+                  do_algo_4(function(result4) {
+                    do_algo_5(function(output) {
+                      // Procesar la SALIDA!!!
+                    });
+                  });
+                });
+              });
+            });
+
+      section(data-bespoke-hash="concurrency-promises")
+        h2.bullet Promises
+        hr
+        div
+          div Representan un valor que eventualmente sera retornado
+          div Alivian el "Callback HELL" porque "aplanan" el codigo
+          div Existe un <a href="http://promises-aplus.github.io/promises-spec/">PROPOSAL</a> open source
+        
+        pre.bullet
+          code.language-javascript.
+            var promiseAction = function(arg1, arg2) {
+              var deferred = Q.defer();
+              firstAction(arg1, arg2, deferred.resolve);
+              //Retornamos la promesa
+              return  deferred.promise;
+            }
+            // Encadenamos las promesas
+            promiseAction(arg1, arg2).then(callback);
+
+      section(data-bespoke-hash="concurrency-event-emitter")
+        h2.bullet EventEmitter
+        hr
+        div
+          div Incluidos en la lib standard
+          div Potentes y la API es simple
+          div Permite crear eventos propios
+        
+        pre.bullet
+          code.language-javascript.
+            var events = require('events);
+            var emitter = new events.EventEmitter();
+            var sayHi = function say(){
+              console.log('Hola MeetupJS');
+            }
+            //Registramos el listener
+            emitter.on('sayHi', sayHi);
+            //Alguien emite el evento
+            emitter.emit('sayHi');
+
+      section(data-bespoke-hash="not-only-http").not-only-http
+        h2 No solo existe HTTP!
+        img(src="images/nodejs_networking.png", alt="No solo existe HTTP")
+
+      section(data-bespoke-hash="networking1")
+        h2 Networking
+        ul
+          li El event loop es eficiente para I/O bound
+          li Pero...Networking es CPU bound?
+          li.white Segur@s?
+          li Respuesta: Networking === I/O 
+          li Entonces: Networking === I/O === NodeJs &#128525;&#128525;&#128525;
+        
+        h3.bullet.white Usemos otros protocolos!
+        h3.bullet.white FTP, IRC, JABBER, MeetupJSProtocol (?)
+        h3.bullet.white Algunos Modulos: net, dgram, node-irc y mas
+
+      section(data-bespoke-hash="networking2")
+        h2 Distintas capas de transporte TCP y UDP
+        hr
+        div
+          div User Datagram Protocol (<em>UDP</em>), No orientado a la conexion!
+          div Transmission Control Protocol (<em>TCP</em>), Orientado a la conexion!
+
+      section(data-bespoke-hash="networking-udp")
+        h2.bullet Simple UDP Server!
+        hr
+        pre
+          code.language-javascript.
+            var dgram = require('dgram');
+            var server = dgram.createSocket('udp4');
+            
+            server.on('message', function (message, remote) {
+              console.log(remote.address + ':' + remote.port +' - ' + message);
+            });
+            server.bind(9000);
+
+      section(data-bespoke-hash="networking-tcp")
+        h2 Simple TCP Server!
+        hr
+        pre
+          code.language-javascript.
+            var net = require('net');
+            var server = net.createServer();
+            server.listen(PORT, HOST);
+            server.on('connection', function(sock) {
+              console.log('CONEXION: ' + sock.remoteAddress +':'+ sock.remotePort);
+            });
+
+      section(data-bespoke-hash="distributed-system-welcome")
+        h2.bullet Sistemas distribuidos
+        hr
+        div Bienvenidos...
+        ul
+          li
+            img(src="images/matrix_enter.gif", alt="Entrando a la matrix...")
+
+      section(data-bespoke-hash="distributed-system1")
+        h2.bullet Sistemas distribuidos
+        hr
+        ul
+          li Maquinas conectadas a una red
+          li Las maquinas se comunican y coordinan sus acciones intercambiando mensajes.
+          li Intentan solucionar un objetivo comun
+          li mas...
+
+      section(data-bespoke-hash="distributed-system2", data-bespoke-state="white-background").intro--background-full.meetup-cover
+        h2 Ejemplo de arquitectura
+        hr
+        img(src="images/distributed_example.png", alt="Ejemplo arquitectura")
+
+      section(data-bespoke-hash="distributed-system3")
+        h2.bullet Todo va tomando otra forma...
+        hr
+        ul
+          li
+            img(src="images/matrix_operador.gif", alt="Sistemas distribuidos actuales")
+
+      section(data-bespoke-hash="distributed-system4")
+        h2.bullet "Un gran poder conlleva una gran Responsabilidad"
+        i.bullet.white by "Tio Ben"
+        hr
+        ul
+          li Siempre, debemos evaluar antes de hacer
+          li Escalar no es trivial
+          li Nuestro stack comienza a crecer (ojo!)
+          li Tenemos que monitorear y mantener vivos mas servicios
+          li Programar es divertido y es lo que nos gusta! &#128517;
+ 
+      section(data-bespoke-hash="summary")
+        h2.bullet Mi humilde opinion
+        hr
+        ul
+          li NodeJS no es solo para API's REST (HTTP)!
+          li Existe una gran cantidad de <a href="https://nodejsmodules.org/">MODULOS</a> y gran comunidad
+          li Es muy eficiente/divertido para I/O bound!
+          li Todo el Stack debe ser Non-Blocking, sino alguien nos va a limitar
+          li Recomiendo Nodejs como "puerta de entrada", "proxy", etc.
+          li Por favor eviten procesos CPU bound en NodeJS
+          li En produccion usar <a href="https://github.com/nodejitsu/forever">FOREVER</a>
+          li Multicore? <a href="http://nodejs.org/api/cluster.html">CLUSTER</a>
+          li Prueben NodeJS en <a href="https://www.heroku.com/">Heroku</a>
+          li.white Con una cerveza podemos seguir charlando &#128525;
+
+      section(data-bespoke-hash="questions")
+        h2.bullet Muchas Gracias!
+        h2.bullet ¿¿¿ Preguntas ???
+        hr
+        pre.bullet
+          code.language-javascript.
+            var options = {volume: const.HIGH};
+            publico.on('aplauso', function(data) {
+              orador.agradece(data);
+            });
+
+            while(1) {
+              publico.aplaudir(options);
+            }
+        h4 por Martin Alderete
+
+    // build:js scripts/scripts.js
+    script(src='bower_components/bespoke.js/dist/bespoke.min.js')
+    script(src='bower_components/bespoke-keys/dist/bespoke-keys.min.js')
+    script(src='bower_components/bespoke-touch/dist/bespoke-touch.min.js')
+    script(src='bower_components/bespoke-bullets/dist/bespoke-bullets.min.js')
+    script(src='bower_components/bespoke-scale/dist/bespoke-scale.min.js')
+    script(src='bower_components/bespoke-hash/dist/bespoke-hash.min.js')
+    script(src='bower_components/bespoke-progress/dist/bespoke-progress.min.js')
+    script(src='bower_components/bespoke-state/dist/bespoke-state.min.js')
+    script(src='bower_components/bespoke-forms/dist/bespoke-forms.min.js')
+    script(src='bower_components/prism/prism.js')
+    script(src='scripts/main.js')
+    // endbuild

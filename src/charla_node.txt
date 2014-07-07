@@ -1,0 +1,77 @@
+Agenda
+=======
+
+* Como funciona NodeJS
+* Concurrencia en Node
+* NodeJS no es SOLO WEB
+* TCP y UDP con NodeJS
+* Sistemas distribuidos incluyendo NodeJS
+* Mis pensamientos :D!
+
+Intro:
+    Server-side JavaScript!
+    Curva de aprendizaje simple: Moverse del Browser al "backend" es simple!
+    Ecosistema/comunidad muy activa!
+    Con baterias incluidas!
+    Asynchronous Programming!
+    Event-Driven!
+        Influenciado por "Twisted"(Python), "EventMachine"(Ruby)
+
+
+Repaso de SO
+==============
+    CPU bound Process
+        Procesos que estan condicionados por el CPU, es decir, mejoran si el CPU mejora!
+        Ejemplos: Procesamiento de imagenes, señales, encoding de audio, calculo de matrices.
+
+    I/O bound Process
+        Procesos que estan condicionados por I/O, es decir, mejoran si el subsstema de I/O mejora!
+        Ejemplos: Accesos al filesystem, accesos a una base de datos, trabajo de red.
+
+    La mayoria de nuestras aplicaciones son I/O BOUND!
+
+
+Como funciona NodeJS
+=====================
+    Arquitectura
+        Inspirado por Twistes, EventMachine, etc...
+        Single-thread (User land)
+        Utiliza en libev (event-loop)
+        Utiliza libeio (POSIX I/O asincrona)
+        <Imagen Node_internal_stack>
+    
+    
+    THE event-loop.
+        <Imagen con el Event-Loop> Explicacion!!!!
+    
+
+Concurrencia en Node
+=====================
+    <ANIMACION DE CONCURRENCIA WTF!!!!!!!!>
+    
+        Callbacks
+        
+        EventEmitter
+        
+        Promises
+
+
+
+NodeJS no es SOLO WEB
+=====================
+    Networking === I/O
+    NodeJS === I/O
+    Networking == NodeJS
+
+
+TCP y UDP con NodeJS
+=====================
+    Server super simples!
+
+
+Sistemas distribuidos incluyendo NodeJS
+========================================
+
+
+Mis pensamientos :D!
+=====================
