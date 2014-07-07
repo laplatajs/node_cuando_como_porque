@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>NodeJS Como? Cuando? Por qué?</title>
+    <link rel="stylesheet" href="styles/styles.css"/>
+  </head>
+  <body>
+    <article>
+      <section data-bespoke-hash="cover" data-bespoke-state="white-background" class="intro--background-full meetup-cover"></section>
+      <section data-bespoke-hash="initial">
+        <h1>NodeJS</h1>
+        <h2>Como? Cuando? Por qué?</h2><br><br>
+        <div>
+          <h4>Martin Alderete</h4>
+          <h4>malderete@gmail.com</h4>
+          <div><a href="http://github.com/malderete">github.com/malderete</a></div>
+          <div><a href="http://twitter.com/alderetemartin">@alderetemartin</a></div>
+          <hr>
+          <div><a href="http://github.com/laplatajs">github.com/laplatajs</a></div>
+        </div>
+      </section>
+      <section data-bespoke-hash="agenda">
+        <h2>Agenda</h2>
+        <hr>
+        <div>
+          <dev>Repaso</dev>
+          <div>Como funciona NodeJS</div>
+          <div>Concurrencia en Node</div>
+          <div>NodeJS NO es solo HTTP</div>
+          <div>Networking con NodeJS</div>
+          <div>NodeJS en Sistemas distribuidos</div>
+          <div>Mi opinion :D!</div>
+        </div>
+      </section>
+      <section data-bespoke-hash="so">
+        <h2>Repaso de SO</h2>
+        <ul class="bullet">
+          <li><em>CPU bound Process</em></li>
+          <li>Procesos que estan condicionados por el <b>CPU</b>, es decir, mejoran si el CPU mejora!</li>
+          <li class="white">Procesamiento de audio, calculos matriciales, etc.</li>
+        </ul><br>
+        <ul>
+          <li><em>I/O bound Process</em></li>
+          <li>Procesos que estan condicionados por <b>I/O</b>, es decir, mejoran si el subsistema de I/O mejora!</li>
+          <li class="white">File system, bases de datos, Networking, etc.</li>
+        </ul><br>
+        <h2 class="bullet white">La mayoria de las apps son I/O BOUND!</h2>
+      </section>
+      <section data-bespoke-hash="how-it-works-internals">
+        <h2 class="bullet"> Arquitectura de NodeJS</h2>
+        <div>
+          <div>Event-Driven!</div>
+          <div>Asynchronous Programming!</div>
+          <div>Inspirado por <b>Twisted</b>, <b>EventMachine</b>, etc...</div>
+          <div>Single-thread (User space)</div>
+          <div>Utiliza en <b>libev</b> (event-loop)</div>
+          <div>Utiliza <b>libeio</b> (POSIX I/O asincrona)</div>
+          <div>y otras cosas...</div>
+          <div><img src="images/node_internal_stack.png" alt="Node internal stack"></div>
+        </div>
+      </section>
+      <section data-bespoke-hash="how-it-works-event-loop">
+        <h2 class="bullet"><b>THE</b> event-loop <a href="http://www.kegel.com/c10k.html">(C10K)</a>
+          <ul>
+            <li><img src="images/threading_node.png" alt="Node Event Loop"></li>
+          </ul>
+        </h2>
+      </section>
+      <section data-bespoke-hash="concurrency-no-way">
+        <h2 class="bullet">Concurrencia hecha simple</h2>
+        <hr>
+        <ul>
+          <li><img src="images/NO_concurrencia.gif"></li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="concurrency-callbacks">
+        <h2 class="bullet">Callbacks</h2>
+        <hr>
+        <div>
+          <div>Comunes en JS, tod@s las usamos!</div>
+          <div>Pueden generar el "Callback HELL o Pyramid of Doom" Facilmente! &#128520;&#128520;&#128520;</div>
+        </div>
+        <pre class="bullet"><code class="language-javascript">doSomething(params, doThisWhenFinish);
+</code></pre>
+      </section>
+      <section data-bespoke-hash="concurrency-callbacks-hell-doom">
+        <h2 class="bullet">Callbacks Hell</h2>
+        <hr>
+        <pre class="bullet"><code class="language-javascript">do_algo_1(function(input_value, result1) {
+  do_algo_2(function(result2) {
+    do_algo_3(function(result3) {
+      do_algo_4(function(result4) {
+        do_algo_5(function(output) {
+          // Procesar la SALIDA!!!
+        });
+      });
+    });
+  });
+});
+</code></pre>
+      </section>
+      <section data-bespoke-hash="concurrency-promises">
+        <h2 class="bullet">Promises</h2>
+        <hr>
+        <div>
+          <div>Representan un valor que eventualmente sera retornado</div>
+          <div>Alivian el "Callback HELL" porque "aplanan" el codigo</div>
+          <div>Existe un <a href="http://promises-aplus.github.io/promises-spec/">PROPOSAL</a> open source</div>
+        </div>
+        <pre class="bullet"><code class="language-javascript">var promiseAction = function(arg1, arg2) {
+  var deferred = Q.defer();
+  firstAction(arg1, arg2, deferred.resolve);
+  //Retornamos la promesa
+  return  deferred.promise;
+}
+// Encadenamos las promesas
+promiseAction(arg1, arg2).then(callback);
+</code></pre>
+      </section>
+      <section data-bespoke-hash="concurrency-event-emitter">
+        <h2 class="bullet">EventEmitter</h2>
+        <hr>
+        <div>
+          <div>Incluidos en la lib standard</div>
+          <div>Potentes y la API es simple</div>
+          <div>Permite crear eventos propios</div>
+        </div>
+        <pre class="bullet"><code class="language-javascript">var events = require('events);
+var emitter = new events.EventEmitter();
+var sayHi = function say(){
+  console.log('Hola MeetupJS');
+}
+//Registramos el listener
+emitter.on('sayHi', sayHi);
+//Alguien emite el evento
+emitter.emit('sayHi');
+</code></pre>
+      </section>
+      <section data-bespoke-hash="not-only-http" class="not-only-http">
+        <h2>No solo existe HTTP!</h2><img src="images/nodejs_networking.png" alt="No solo existe HTTP">
+      </section>
+      <section data-bespoke-hash="networking1">
+        <h2>Networking</h2>
+        <ul>
+          <li>El event loop es eficiente para I/O bound</li>
+          <li>Pero...Networking es CPU bound?</li>
+          <li class="white">Segur@s?</li>
+          <li>Respuesta: Networking === I/O </li>
+          <li>Entonces: Networking === I/O === NodeJs &#128525;&#128525;&#128525;</li>
+        </ul>
+        <h3 class="bullet white">Usemos otros protocolos!</h3>
+        <h3 class="bullet white">FTP, IRC, JABBER, MeetupJSProtocol (?)</h3>
+        <h3 class="bullet white">Algunos Modulos: net, dgram, node-irc y mas</h3>
+      </section>
+      <section data-bespoke-hash="networking2">
+        <h2>Distintas capas de transporte TCP y UDP</h2>
+        <hr>
+        <div>
+          <div>User Datagram Protocol (<em>UDP</em>), No orientado a la conexion!</div>
+          <div>Transmission Control Protocol (<em>TCP</em>), Orientado a la conexion!</div>
+        </div>
+      </section>
+      <section data-bespoke-hash="networking-udp">
+        <h2 class="bullet">Simple UDP Server!</h2>
+        <hr>
+        <pre><code class="language-javascript">var dgram = require('dgram');
+var server = dgram.createSocket('udp4');
+
+server.on('message', function (message, remote) {
+  console.log(remote.address + ':' + remote.port +' - ' + message);
+});
+server.bind(9000);
+</code></pre>
+      </section>
+      <section data-bespoke-hash="networking-tcp">
+        <h2>Simple TCP Server!</h2>
+        <hr>
+        <pre><code class="language-javascript">var net = require('net');
+var server = net.createServer();
+server.listen(PORT, HOST);
+server.on('connection', function(sock) {
+  console.log('CONEXION: ' + sock.remoteAddress +':'+ sock.remotePort);
+});
+</code></pre>
+      </section>
+      <section data-bespoke-hash="distributed-system-welcome">
+        <h2 class="bullet">Sistemas distribuidos</h2>
+        <hr>
+        <div>Bienvenidos...</div>
+        <ul>
+          <li><img src="images/matrix_enter.gif" alt="Entrando a la matrix..."></li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="distributed-system1">
+        <h2 class="bullet">Sistemas distribuidos</h2>
+        <hr>
+        <ul>
+          <li>Maquinas conectadas a una red</li>
+          <li>Las maquinas se comunican y coordinan sus acciones intercambiando mensajes.</li>
+          <li>Intentan solucionar un objetivo comun</li>
+          <li>mas...</li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="distributed-system2" data-bespoke-state="white-background" class="intro--background-full meetup-cover">
+        <h2>Ejemplo de arquitectura</h2>
+        <hr><img src="images/distributed_example.png" alt="Ejemplo arquitectura">
+      </section>
+      <section data-bespoke-hash="distributed-system3">
+        <h2 class="bullet">Todo va tomando otra forma...</h2>
+        <hr>
+        <ul>
+          <li><img src="images/matrix_operador.gif" alt="Sistemas distribuidos actuales"></li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="distributed-system4">
+        <h2 class="bullet">"Un gran poder conlleva una gran Responsabilidad"</h2><i class="bullet white">by "Tio Ben"</i>
+        <hr>
+        <ul>
+          <li>Siempre, debemos evaluar antes de hacer</li>
+          <li>Escalar no es trivial</li>
+          <li>Nuestro stack comienza a crecer (ojo!)</li>
+          <li>Tenemos que monitorear y mantener vivos mas servicios</li>
+          <li>Programar es divertido y es lo que nos gusta! &#128517;</li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="summary">
+        <h2 class="bullet">Mi humilde opinion</h2>
+        <hr>
+        <ul>
+          <li>NodeJS no es solo para API's REST (HTTP)!</li>
+          <li>Existe una gran cantidad de <a href="https://nodejsmodules.org/">MODULOS</a> y gran comunidad</li>
+          <li>Es muy eficiente/divertido para I/O bound!</li>
+          <li>Todo el Stack debe ser Non-Blocking, sino alguien nos va a limitar</li>
+          <li>Recomiendo Nodejs como "puerta de entrada", "proxy", etc.</li>
+          <li>Por favor eviten procesos CPU bound en NodeJS</li>
+          <li>En produccion usar <a href="https://github.com/nodejitsu/forever">FOREVER</a></li>
+          <li>Multicore? <a href="http://nodejs.org/api/cluster.html">CLUSTER</a></li>
+          <li>Prueben NodeJS en <a href="https://www.heroku.com/">Heroku</a></li>
+          <li class="white">Con una cerveza podemos seguir charlando &#128525;</li>
+        </ul>
+      </section>
+      <section data-bespoke-hash="questions">
+        <h2 class="bullet">Muchas Gracias!</h2>
+        <h2 class="bullet">¿¿¿ Preguntas ???</h2>
+        <hr>
+        <pre class="bullet"><code class="language-javascript">var options = {volume: const.HIGH};
+publico.on('aplauso', function(data) {
+  orador.agradece(data);
+});
+
+while(1) {
+  publico.aplaudir(options);
+}</code></pre>
+        <h4>por Martin Alderete</h4>
+      </section>
+    </article>
+    <script src="scripts/scripts.js"></script>
+  </body>
+</html>
